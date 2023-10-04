@@ -5,6 +5,7 @@
 #include "Admin.h"
 #include "Normal.h"
 #include "Games.h"
+#include " OfficeAutomation.h"
 using namespace std;
 
 //POBLA LA BASE DE DATOS DE USUARIOS
@@ -28,6 +29,7 @@ void populateUsers(vector<User*>& u){
 
 void populateGames(vector<Software*>& s){
     // RELLENANDO JUEGOS
+
     s.push_back(new Games("Dark souls","fromsoftware","+18",36,"RPG"));
     s.push_back(new Games("Bloodborne","fromsoftware","+18",38,"RPG"));
     s.push_back(new Games("Red dead redemption","Rockstar Games","+18",60,"mundo abierto"));
@@ -48,6 +50,14 @@ void populateGames(vector<Software*>& s){
     s.push_back(new Games("Age of Empires IV","Relic Entertainment","+10",29,"Strategy"));
     s.push_back(new Games("Tekken 7"," Bandai Namco Entertainment","+12",12,"Fight"));
     s.push_back(new Games("For Honor","Ubisoft Montreal","+16",32,"Fight"));
+}
+void populateOfficeAutomation(vector<Software*>& o){
+    o.push_back(new OfficeAutomation("Google Drive","uchigatana","+18",20,3));
+    o.push_back(new OfficeAutomation("Microsoft Excel","ian","+14",45,9));
+    o.push_back(new OfficeAutomation("Dropbox","clerigo","+18",28,4));
+    o.push_back(new OfficeAutomation("","etoile","+10",34,6));
+    o.push_back(new OfficeAutomation("","siziyi","+14",24,7));
+
 }
 
 int main(){
