@@ -12,12 +12,7 @@ class Software{
         vector<User> userList;
         int price;
     public:
-        Software(string name,string developer,string ageClassification,int price){
-            this -> name = name;
-            this -> developer = developer;
-            this -> ageClassification = ageClassification;
-            this -> price = price;
-        }
+        Software(string name,string developer,string ageClassification,int price);
         ~Software();
         string getName();
         string getDeveloper();
@@ -28,7 +23,7 @@ class Software{
         void setAgeClassification(string ageClassification);
         void setPrice(int price);
         void insertUser(User user);
-        }
+};
 
 Software::Software(string name,string developer,string ageClassification,int price){
     this -> name = name;

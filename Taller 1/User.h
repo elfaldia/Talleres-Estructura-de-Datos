@@ -21,11 +21,11 @@ User::User(string user, string password) {
 }
 
 string User::getUser() {
-    return user;
+    return this ->  user;
 }
 
 string User::getPassword() {
-    return password;
+    return this -> password;
 }
 
 void User::setUser(string user) {

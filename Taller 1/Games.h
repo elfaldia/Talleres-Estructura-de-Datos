@@ -17,10 +17,6 @@ public:
 
 Games::Games(string name,string developer,string ageClassification,int price,string gender):Software(name,developer,ageClassification,price)
 {
-    this -> name = name;
-    this -> developer = developer;
-    this -> ageClassification = ageClassification;
-    this -> price = price;
     this -> gender = gender;
 }
 Games::~Games(){}
