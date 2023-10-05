@@ -13,7 +13,8 @@ class Software{
         int price;
     public:
         Software(string name,string developer,string ageClassification,int price);
-        ~Software();
+        virtual ~Software(){}
+        virtual void dummy(){}
         string getName();
         string getDeveloper();
         string getAgeClassificion();
@@ -31,7 +32,7 @@ Software::Software(string name,string developer,string ageClassification,int pri
     this -> ageClassification = ageClassification;
     this -> price = price;   
 }
-Software::~Software(){}
+
 string Software::getName(){
     return this -> name;
 }

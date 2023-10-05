@@ -1,11 +1,14 @@
 #include <iostream>
 #include <vector>
 #include "User.h"
+#include "Software.h"
 #include "Child.h"
 #include "Admin.h"
 #include "Normal.h"
 #include "Games.h"
-#include " OfficeAutomation.h"
+#include "Office.h"
+#include "Production.h"
+#include "Navegator.h"
 using namespace std;
 
 //POBLA LA BASE DE DATOS DE USUARIOS
@@ -27,8 +30,8 @@ void populateUsers(vector<User*>& u){
     u.push_back(new Normal("claymore","fistbuild",50,"claymore@ml.com"));
 }
 
+// RELLENANDO JUEGOS
 void populateGames(vector<Software*>& s){
-    // RELLENANDO JUEGOS
 
     s.push_back(new Games("Dark souls","fromsoftware","+18",36,"RPG"));
     s.push_back(new Games("Bloodborne","fromsoftware","+18",38,"RPG"));
@@ -42,8 +45,8 @@ void populateGames(vector<Software*>& s){
     s.push_back(new Games("Albion online","Sandbox Interactive","+10",9,"MMO"));
     s.push_back(new Games("FIFA 23","Electronic Arts","+10",90,"Deportes"));
     s.push_back(new Games("NBA 2k21","Visuals concepts","+12",51,"Deportes"));
-    s.push_back(new Games("Uncharted 4","Naughty Dog","+14",37,"Acción y aventura"));
-    s.push_back(new Games("The Last of Us","Naughty Dog","+16",41,"Acción y aventura"));
+    s.push_back(new Games("Uncharted 4","Naughty Dog","+14",37,"Puzzle"));
+    s.push_back(new Games("The Last of Us","Naughty Dog","+16",41,"Puzzle"));
     s.push_back(new Games("Tom Clancy's Rainbow Six: Siege","Ubisoft Montreal","+12",16,"Tactical shooter"));
     s.push_back(new Games("Counter-Strike: Global Offensive","Jess Cliffe","+14",8,"Tactical shooter"));
     s.push_back(new Games("StarCraft II: Wings of Liberty","Blizzard Entertainment","+10",47,"Strategy"));
@@ -51,13 +54,28 @@ void populateGames(vector<Software*>& s){
     s.push_back(new Games("Tekken 7"," Bandai Namco Entertainment","+12",12,"Fight"));
     s.push_back(new Games("For Honor","Ubisoft Montreal","+16",32,"Fight"));
 }
-void populateOfficeAutomation(vector<Software*>& o){
-    o.push_back(new OfficeAutomation("Google Drive","uchigatana","+18",20,3));
-    o.push_back(new OfficeAutomation("Microsoft Excel","ian","+14",45,9));
-    o.push_back(new OfficeAutomation("Dropbox","clerigo","+18",28,4));
-    o.push_back(new OfficeAutomation("","etoile","+10",34,6));
-    o.push_back(new OfficeAutomation("","siziyi","+14",24,7));
 
+//RELLENANDO OFIMÁTICA
+void populateOfficeAutomation(vector<Software*>& o){
+    o.push_back(new Office("Google Drive","uchigatana","+18",20,3));
+    o.push_back(new Office("Microsoft Excel","ian","+14",45,9));
+    o.push_back(new Office("Dropbox","clerigo","+18",28,4));
+    o.push_back(new Office("Microsoft Word","etoile","+10",34,6));
+    o.push_back(new Office("Microsoft PowerPoint","siziyi","+14",24,7));
+}
+
+//RELLENANDO PRODUCCION
+void populateProduction(vector<Software*>& p){
+    p.push_back(new Production("Netflix","Reed Hastings","+10",4, "streaming"));
+    p.push_back(new Production("Spotify","Daniel Ek","+10",6, "musica"));
+    p.push_back(new Production("Photoshop","Adobe Systems Incorporated","+16",21, "fotos"));
+    p.push_back(new Production("Youtube","Neal Mohan","+10",2, "video"));
+}
+
+//RELLENANDO NAVIGADOR
+void populateNavegator(vector<Software*>& n){
+    n.push_back(new Navegator("Opera GX","Opera Software ASA","+12",24));
+    n.push_back(new Navegator("Google","Google corporation","+14",32));
 }
 
 int main(){
@@ -66,6 +84,9 @@ int main(){
     vector<Software*> softwares;
     populateUsers(users);
     populateGames(softwares);
-    
+    populateOfficeAutomation(softwares);
+    populateProduction(softwares);
+    populateNavegator(softwares);
+
     return 0;
 };

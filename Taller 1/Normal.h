@@ -11,6 +11,7 @@ class Normal : public User{
     public:
         Normal(string user, string password,int age,string mail);
         ~Normal();
+        void dummy() override{}
         void setAge(int age);
         void setMail(string mail);
         bool getAcces();

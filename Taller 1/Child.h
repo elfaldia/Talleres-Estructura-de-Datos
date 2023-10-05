@@ -11,6 +11,7 @@ class Child : public User {
     public:
         Child(string user, string password, int age);
         ~Child();
+        void dummy() override{}
         void setAge(int age);
         bool getAcces();
         int getAge();

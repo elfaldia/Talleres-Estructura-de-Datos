@@ -10,6 +10,7 @@ string gender;
 public:
     Games(string name,string developer,string ageClassification,int price,string gender);
     ~Games();
+    void dummy() override{}
     void setGender(string gender);
     string getGender();
 

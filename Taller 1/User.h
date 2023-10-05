@@ -9,6 +9,8 @@ private:
 
 public:
     User(string user, string password);
+    virtual ~User(){}
+    virtual void dummy(){}
     string getUser();
     string getPassword();
     void setUser(string user);

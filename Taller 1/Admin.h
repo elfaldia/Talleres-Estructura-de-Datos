@@ -10,6 +10,7 @@ class Admin : public User{
     public:
         Admin(string user, string password,string mail);
         ~Admin();
+        void dummy() override{}
         void setMail(string mail);
         bool getAcces();
         string getMail();
