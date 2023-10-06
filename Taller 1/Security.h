@@ -5,6 +5,7 @@ using namespace std;
 
 class Security:public Software{
     private:
+        //tipo de malware que soluciona
         string malware;
     public:
         Security(string name,string developer,string ageClassification,int price,string malware);
@@ -13,12 +14,14 @@ class Security:public Software{
         string getMalware();
         void changeMalware();
 };
+//constructor de Security.h
 Security::Security(string name,string developer,string ageClassification,int price,string malware):Software(name,developer,ageClassification,price){
     this -> malware = malware;
 }
 string Security::getMalware(){
     return this -> malware;
 }
+//funcion que cambia el tipo de malware que resuelve
 void Security::changeMalware(){
     
     cout<<"Ingrese el malware: "<<endl;

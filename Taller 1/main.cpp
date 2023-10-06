@@ -125,11 +125,13 @@ void populateSecurity(vector<Software*>& s){
     s.push_back(new Security("Malwarebytes Essential","Malwarebytes Essential inc","0",26,"troyanos"));
 }
 
+//RELLENA LOS SOFTWARE DE TIPO SOCIAL
 void populateSocial(vector<Software*>& s){
     s.push_back(new Social("Instagram","Instagram company","+14",640));
     s.push_back(new Social("WhasApp","Meta","+18",600));
 }
    
+//RELLENA A CADA USUARIO DE TIPO SOCIAL CON SUS AMIGOS
 void populateFriends(vector<Software*>& s,vector<User*>& u){
     for(int i = 0; i < s.size(); i++){
         Social* social = dynamic_cast<Social*>(s[i]);
@@ -166,7 +168,7 @@ void populateFriends(vector<Software*>& s,vector<User*>& u){
                             cont++;
                         }
                     }
-                }cout<<endl;
+                }
             }
         }
     }
@@ -182,7 +184,7 @@ void populateSoftware(vector<Software*>& s){
     populateSocial(s);
 }
 
-//RELLENANDO TODO
+//RELLENANDO TODO, TANTO BASES DE USUARIOS COMO DE SOFTWARE
 void populateEverything(vector<Software*>& s,vector<User*>& u){
     populateUsers(u);
     populateSoftware(s);
@@ -190,38 +192,31 @@ void populateEverything(vector<Software*>& s,vector<User*>& u){
     populateFriends(s,u);
 }
 
-int main(){
-    vector<User*> users;
-    vector<Software*> softwares;
-    populateEverything(softwares,users);
+//FUNCIÓN QUE TENDRÁ EL PROGRAMA GENERAL
+void system(vector<Software*>& s, vector<User*>& u){
+    bool verification = true;
+    int option;
+    while(verification){
+        cout<<"Bienvenidos al sistema!"<<"\n"<<"A continuación se desplegarán dos opciones, ingrese el numero que lo identifica:"<<endl;
+        cout<<"1.- Log in"<<"\n"<<"2.- Close system"<<endl;
+        cin>>option;
+        if(option == 2){
+            verification = false;
+        }else{
 
-    for(int j = 0; j < softwares.size(); j++){
-        Social* social = dynamic_cast<Social*>(softwares[j]);
-        
-        if(social){
-            for(int i = 0; i < social->getNumberOfUsers(); i++){
-                cout<<social->getUser(i).getUser()<<endl;
-                for(int k = 0; k < social->getUser(i).numberOfFriends(); k++){
-                    cout<<social->getUser(i).getFriend(k).getUser()<<endl;
-                }cout<<endl;
-            }
-        }
-    }
-
-    return 0;
-};
-
-void funcionImplicita(){
-    for(int j = 0; j < softwares.size(); j++){
-        Social* social = dynamic_cast<Social*>(softwares[j]);
-        
-        if(social){
-            for(int i = 0; i < social->getNumberOfUsers(); i++){
-                cout<<social->getUser(i).getUser()<<endl;
-                for(int k = 0; k < social->getUser(i).numberOfFriends(); k++){
-                    cout<<social->getUser(i).getFriend(k).getUser()<<endl;
-                }cout<<endl;
-            }
         }
     }
 }
+
+void menu(vector<Software*>& s, vector<User*>& u){
+    
+}
+
+int main(){
+    vector<User*> users; //se inicializa el vector users
+    vector<Software*> softwares;//se inicializa el vector software 
+    populateEverything(softwares,users);
+    system(softwares,users);
+    return 0;
+};
+

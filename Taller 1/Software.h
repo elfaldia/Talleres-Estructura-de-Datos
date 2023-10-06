@@ -11,10 +11,12 @@ class Software{
         string ageClassification;
         int price;
     protected:
+        //lista de usuarios de cada software
         vector<User> userList;
     public:
         Software(string name,string developer,string ageClassification,int price);
         virtual ~Software(){}
+        //funcion virtual vacia para permitir el polimorfismo
         virtual void dummy(){}
         string getName();
         string getDeveloper();
@@ -30,7 +32,7 @@ class Software{
             return this -> userList.size();
         }
 };
-
+//constructor de Software
 Software::Software(string name,string developer,string ageClassification,int price){
     this -> name = name;
     this -> developer = developer;

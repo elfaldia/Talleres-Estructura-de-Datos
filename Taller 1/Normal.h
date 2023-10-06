@@ -19,14 +19,14 @@ class Normal : public User{
         string getMail();
         int ageVerification(int age,string user);
 };
-
+//Confirma que el usuario sea mayor o igual a 18 años
 int Normal::ageVerification(int age,string user){
     while(age < 18){
         cout<<"La edad del usuario "<<user<<" no es valida, ingrese nuevamente: "<<endl;
         cin >> age;
     }return age;
 }
-
+//constructor de Noraml.h
 Normal::Normal(string user,string password,int age,string mail):User(user,password){
     this -> age = ageVerification(age,user);
     this -> mail = mail;

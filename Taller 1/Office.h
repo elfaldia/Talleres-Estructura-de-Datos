@@ -13,10 +13,12 @@ class Office:public Software
         void dummy() override{}
         void setArchives(int archives);
         int getArchives();
+        //elimina un archivo
         void deleteArchive();
+        //agrega un archivo
         void addArchive();
 };
-
+//constructor de Office.h
 Office:: Office(string name, string developer, string ageClassification, int price, int archives) : Software(name,developer,ageClassification,price){
     this -> archives = archives;
 }

@@ -15,11 +15,12 @@ class Admin : public User{
         void setMail(string mail);
         bool getAcces();
         string getMail();
+        // age va a estar inicializada con 0, ya qe será lo que identifica a los admin
         int getAge(){
             return this -> age;
         }
 };
-
+//constructor de Admin.h
 Admin::Admin(string user,string password,string mail):User(user,password){
     this -> mail = mail;
     this -> age = 0;
