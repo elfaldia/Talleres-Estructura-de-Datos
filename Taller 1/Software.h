@@ -9,8 +9,9 @@ class Software{
         string name;
         string developer;
         string ageClassification;
-        vector<User> userList;
         int price;
+    protected:
+        vector<User> userList;
     public:
         Software(string name,string developer,string ageClassification,int price);
         virtual ~Software(){}
@@ -24,6 +25,10 @@ class Software{
         void setAgeClassification(string ageClassification);
         void setPrice(int price);
         void insertUser(User user);
+        User getUser(int index);
+        int getNumberOfUsers(){
+            return this -> userList.size();
+        }
 };
 
 Software::Software(string name,string developer,string ageClassification,int price){
@@ -59,4 +64,7 @@ void Software::setPrice(int price){
 }
 void Software::insertUser(User user){
     this -> userList.push_back(user);
+}
+User Software::getUser(int index){
+    return this -> userList[index];
 }

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <string>
 #include "User.h"
 #include "Software.h"
 #include "Child.h"
@@ -9,7 +10,43 @@
 #include "Office.h"
 #include "Production.h"
 #include "Navegator.h"
+#include "Security.h"
+#include "Social.h"
 using namespace std;
+
+//RELLENAR LISTA DE USUARIOS EN CADA SOFTWARE  
+void fillUsersInSoftware(vector<Software*>& s, vector<User*>& u){
+    for(int i = 0; i < s.size(); i++){
+        string v = s[i]->getAgeClassificion();
+        int n = 0;
+        if(v[0] == '+'){
+            v = v.substr(1);
+            n = stoi(v);            
+        }else{
+            n = stoi(v); 
+        }
+        for(int j = 0; j < u.size(); j++){
+            Admin* admin = dynamic_cast<Admin*>(u[j]);
+                if(admin){
+                    s[i]->insertUser(*u[j]);
+                }
+
+            if(n < 18 && n != 0){
+                Child* child = dynamic_cast<Child*>(u[j]);
+                if(child){
+                    s[i]->insertUser(*u[j]);
+                }
+            }else{
+                if(n >= 18||n != 0){
+                    Normal* normal = dynamic_cast<Normal*>(u[j]);
+                    if(normal){
+                        s[i]->insertUser(*u[j]);
+                    }
+                }
+            }
+        }
+    }
+}
 
 //POBLA LA BASE DE DATOS DE USUARIOS
 void populateUsers(vector<User*>& u){
@@ -66,10 +103,10 @@ void populateOfficeAutomation(vector<Software*>& o){
 
 //RELLENANDO PRODUCCION
 void populateProduction(vector<Software*>& p){
-    p.push_back(new Production("Netflix","Reed Hastings","+10",4, "streaming"));
-    p.push_back(new Production("Spotify","Daniel Ek","+10",6, "musica"));
-    p.push_back(new Production("Photoshop","Adobe Systems Incorporated","+16",21, "fotos"));
-    p.push_back(new Production("Youtube","Neal Mohan","+10",2, "video"));
+    p.push_back(new Production("Netflix","Reed Hastings","+18+",4, "streaming"));
+    p.push_back(new Production("Spotify","Daniel Ek","+18+",6, "musica"));
+    p.push_back(new Production("Photoshop","Adobe Systems Incorporated","+18+",21, "fotos"));
+    p.push_back(new Production("Youtube","Neal Mohan","+18+",2, "video"));
 }
 
 //RELLENANDO NAVIGADOR
@@ -78,15 +115,113 @@ void populateNavegator(vector<Software*>& n){
     n.push_back(new Navegator("Google","Google corporation","+14",32));
 }
 
-int main(){
+//RELLENANDO SEGURIDAD
+void populateSecurity(vector<Software*>& s){
+    s.push_back(new Security("Avast One","Avas inc","0",47,"Ransomware"));
+    s.push_back(new Security("Avira","Avira inc","0",49,"Spyware"));
+    s.push_back(new Security("Bitdefender","Bitdefender inc","0",21,"Botnets"));
+    s.push_back(new Security("Kaspersky Premium","Kaspersky inc","0",32,"rootkits"));
+    s.push_back(new Security("AVG Ultimate","AVG inc","0",43,"gusanos"));
+    s.push_back(new Security("Malwarebytes Essential","Malwarebytes Essential inc","0",26,"troyanos"));
+}
 
+void populateSocial(vector<Software*>& s){
+    s.push_back(new Social("Instagram","Instagram company","+14",640));
+    s.push_back(new Social("WhasApp","Meta","+18",600));
+}
+   
+void populateFriends(vector<Software*>& s,vector<User*>& u){
+    for(int i = 0; i < s.size(); i++){
+        Social* social = dynamic_cast<Social*>(s[i]);
+        if(social){
+            string v = s[i]->getAgeClassificion();
+            int n = 0;
+            if(v[0] == '+'){
+                v = v.substr(1);
+                n = stoi(v);            
+            }else{
+                n = stoi(v); 
+            }
+            for(int j = 0; j < social->getNumberOfUsers(); j++){
+                int cont = 0;
+                for(int k = 0; k < u.size(); k++){
+                    if(cont == 2){
+                        break;
+                    }
+                    if(social->getUser(j).getUser() == u[k]->getUser()){
+                        continue;
+                    }else{
+                        if(n == 0){
+                            social->addFriend(j,*u[k]);
+                            cont++;
+                        }
+                        if(n < 18 && n != 0){
+                            Child* child = dynamic_cast<Child*>(u[k]);
+                            if(child){
+                                social->addFriend(j,*u[k]);
+                                cont++;
+                            }
+                        }else{
+                            social->addFriend(j,*u[k]);
+                            cont++;
+                        }
+                    }
+                }cout<<endl;
+            }
+        }
+    }
+}
+
+//RELLENANDO TODOS LOS SOFTWARE
+void populateSoftware(vector<Software*>& s){
+    populateGames(s);
+    populateOfficeAutomation(s);
+    populateProduction(s);
+    populateNavegator(s);
+    populateSecurity(s);
+    populateSocial(s);
+}
+
+//RELLENANDO TODO
+void populateEverything(vector<Software*>& s,vector<User*>& u){
+    populateUsers(u);
+    populateSoftware(s);
+    fillUsersInSoftware(s,u);
+    populateFriends(s,u);
+}
+
+int main(){
     vector<User*> users;
     vector<Software*> softwares;
-    populateUsers(users);
-    populateGames(softwares);
-    populateOfficeAutomation(softwares);
-    populateProduction(softwares);
-    populateNavegator(softwares);
+    populateEverything(softwares,users);
+
+    for(int j = 0; j < softwares.size(); j++){
+        Social* social = dynamic_cast<Social*>(softwares[j]);
+        
+        if(social){
+            for(int i = 0; i < social->getNumberOfUsers(); i++){
+                cout<<social->getUser(i).getUser()<<endl;
+                for(int k = 0; k < social->getUser(i).numberOfFriends(); k++){
+                    cout<<social->getUser(i).getFriend(k).getUser()<<endl;
+                }cout<<endl;
+            }
+        }
+    }
 
     return 0;
 };
+
+void funcionImplicita(){
+    for(int j = 0; j < softwares.size(); j++){
+        Social* social = dynamic_cast<Social*>(softwares[j]);
+        
+        if(social){
+            for(int i = 0; i < social->getNumberOfUsers(); i++){
+                cout<<social->getUser(i).getUser()<<endl;
+                for(int k = 0; k < social->getUser(i).numberOfFriends(); k++){
+                    cout<<social->getUser(i).getFriend(k).getUser()<<endl;
+                }cout<<endl;
+            }
+        }
+    }
+}

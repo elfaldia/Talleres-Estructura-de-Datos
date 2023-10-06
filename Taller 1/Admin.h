@@ -5,6 +5,7 @@ using namespace std;
 
 class Admin : public User{
     private:
+        int age;
         string mail;
         bool loginAcces = true;
     public:
@@ -14,10 +15,14 @@ class Admin : public User{
         void setMail(string mail);
         bool getAcces();
         string getMail();
+        int getAge(){
+            return this -> age;
+        }
 };
 
 Admin::Admin(string user,string password,string mail):User(user,password){
     this -> mail = mail;
+    this -> age = 0;
 }
 Admin::~Admin(){}
 void Admin::setMail(string mail){
