@@ -192,6 +192,32 @@ void populateEverything(vector<Software*>& s,vector<User*>& u){
     populateFriends(s,u);
 }
 
+void menu(vector<Software*>& s, vector<User*>& u){
+    bool verification = true;
+    int option;
+    while(verification){
+        cout<<"Bienvenindo"<<"\n"<<"Opciones: "<<endl;
+        cout<<"1.- Agregar Software."<<"\n"<<"2.- Eliminar Software"<<"\n"<<"3.- Log out"<<endl;
+        cin>>option;
+        switch (option)
+        {
+        case 1:
+
+            break;
+        case 2:
+
+            break;
+        case 3:
+            cout<<"Hasta luego :)"<<endl;
+            verification = false;
+            break;
+        default:
+            cout<<"Opciones invalidas, Intenta nuevamente"<<endl;
+            break;
+        }
+    }
+}
+
 //FUNCIÓN QUE TENDRÁ EL PROGRAMA GENERAL
 void system(vector<Software*>& s, vector<User*>& u){
     bool verification = true;
@@ -203,13 +229,9 @@ void system(vector<Software*>& s, vector<User*>& u){
         if(option == 2){
             verification = false;
         }else{
-
+            menu(s,u);
         }
     }
-}
-
-void menu(vector<Software*>& s, vector<User*>& u){
-    
 }
 
 int main(){
