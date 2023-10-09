@@ -1,9 +1,9 @@
 TALLER 1
 
 -> Lineas para compilar el programa:
-cd "Taller 1"
-g++ main.cpp -o salida
-./salida
+cd "Taller 1" ||
+g++ main.cpp -o salida ||
+./salida ||
 
 -> Usuarias con los cuales esta poblada el sistema: 
 
