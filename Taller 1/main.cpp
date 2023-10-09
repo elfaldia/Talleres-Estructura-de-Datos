@@ -192,22 +192,156 @@ void populateEverything(vector<Software*>& s,vector<User*>& u){
     populateFriends(s,u);
 }
 
-void menu(vector<Software*>& s, vector<User*>& u){
+//VERIFICANDO USUARIO
+User* userVerification(const string& userName,const string& password, vector<User*>& u) {
+    for (int i = 0; i < u.size(); i++) {
+        if (userName == u[i]->getUser()) {
+            if (password == u[i]->getPassword()) {
+                return u[i];
+            } 
+        }
+    }
+    return nullptr; 
+}
+
+//Completa el menu para la funcion agregar usuario
+void addSoftware(User* user,vector<Software*>& s,vector<Software*>& userS){
+    
+    cout<<"A continuación se desplegarán los software disponibles para ti: "<<endl;
+    cout<<"------------------------------------------------------------------"<<endl;
+    vector<int> indices;
+    int index;
+    for(int i = 0; i < s.size(); i++){
+        string v = s[i]->getAgeClassificion();
+        int n = 0;
+        if(v[0] == '+'){
+            v = v.substr(1);
+            n = stoi(v);            
+        }else{
+            n = stoi(v); 
+        }
+        int x = -1;
+        for(int j = 0; j < userS.size(); j++){
+            if(userS[j] == s[i]){
+                x++;
+            }
+        }if(x==-1){
+            Admin* admin = dynamic_cast<Admin*>(user);
+            if(admin){
+                cout<<i<<".- (Nombre): "<<s[i]->getName()<<" (Clasificación de edad): "<<s[i]->getAgeClassificion()<<"  (Precio): "<<s[i]->getPrice()<<endl;   
+                indices.push_back(i);
+            }
+            if(n < 18 && n != 0){
+                Child* child = dynamic_cast<Child*>(user);
+                if(child){
+                    cout<<i<<".- (Nombre): "<<s[i]->getName()<<" (Clasificación de edad): "<<s[i]->getAgeClassificion()<<"  (Precio): "<<s[i]->getPrice()<<endl;
+                    indices.push_back(i);
+                }else{
+                    Normal* normal = dynamic_cast<Normal*>(user);
+                    if(normal){
+                        cout<<i<<".- (Nombre): "<<s[i]->getName()<<" (Clasificación de edad): "<<s[i]->getAgeClassificion()<<"  (Precio): "<<s[i]->getPrice()<<endl;
+                        indices.push_back(i);
+                    }
+                }
+            }    
+        }
+    }
+    cout<<"------------------------------------------------------------------"<<endl;
+    cout<<"Selecciona el indice del software que deseas agregar: "<<endl;
+    cin>>index;
+    cout<<"------------------------------------------------------------------"<<endl;
+    int v = -1;
+    for(int i = 0; i < indices.size(); i++){
+        if(indices[i] == index){
+            userS.push_back(s[index]);
+            cout<<"El software fue agregado exitosamente."<<endl;
+            v++;
+            break;
+        }
+    }
+    if(v == -1){
+        cout<<"El indice no fue ingresado correctamente."<<endl;
+    }
+}
+
+//Completa el menu para la funcion eliminar usuario
+void deleteSoftware(vector<Software*>& userS){
+    vector<int> indices;
+    int index;
+    if(userS.empty()){
+        cout<<"No hay software en tu lista"<<endl;
+    }else{
+        cout<<"\nA continuación se desplegarán los software disponibles actualemente: "<<endl;
+        cout<<"------------------------------------------------------------------"<<endl;
+        for(int i = 0; i < userS.size(); i++){
+            cout<<i<<".- (Nombre): "<<userS[i]->getName()<<" (Clasificación de edad): "<<userS[i]->getAgeClassificion()<<"  (Precio): "<<userS[i]->getPrice()<<endl;
+            indices.push_back(i);
+        }
+        cout<<"------------------------------------------------------------------"<<endl;
+        cout<<"Selecciona el indice del software que deseas eliminar: "<<endl;
+        cin>>index;
+        cout<<"------------------------------------------------------------------"<<endl;
+        string consulta;
+        cout<<"Los usuarios permiten elminar software? S/N"<<endl;
+        cin>>consulta;
+        cout<<"------------------------------------------------------------------"<<endl;
+        if(consulta == "S" || consulta == "s"){
+            int v = -1;
+            for(int i = 0; i < indices.size(); i++){
+                if(indices[i] == index){
+                    userS.erase(userS.begin()+index);
+                    cout<<"El software fue eliminado exitosamente."<<endl;
+                    v++;
+                    break;
+                }
+            }
+            if(v == -1){
+                cout<<"El indice no fue ingresado correctamente."<<endl;
+            }
+        }else{
+            if(consulta == "N" || consulta == "n"){
+                cout<<"No se permitio elminar el software."<<endl;
+            }
+        }
+    }
+}
+
+//Completa el menu para la funcion ver todos los software
+void seeSoftware(vector<Software*>& u){
+    if(u.empty()){
+        cout<<"Acualmente no hay ningun software en tu lista"<<endl;
+    }else{
+        for(int i = 0; i < u.size(); i++){
+            cout<<i<<".- (Nombre): "<<u[i]->getName()<<" (Clasificación de edad): "<<u[i]->getAgeClassificion()<<"  (Precio): "<<u[i]->getPrice()<<endl;
+        }
+    }  
+}
+
+//MENU CON SUS OPCIONES
+void menu(User* user,vector<Software*>& s, vector<User*>& u){
     bool verification = true;
     int option;
+    vector<Software*> userSoftwares;
     while(verification){
-        cout<<"Bienvenindo"<<"\n"<<"Opciones: "<<endl;
-        cout<<"1.- Agregar Software."<<"\n"<<"2.- Eliminar Software"<<"\n"<<"3.- Log out"<<endl;
+
+        cout<<"------------------------------------------------------------------"<<endl;
+        cout<<"Bienvenindo -> "<<user->getUser()<<"\n"<<"Opciones: "<<endl;
+        cout<<"1.- Agregar Software."<<"\n"<<"2.- Eliminar Software"<<"\n"<<"3.- Ver Softwares actuales"<<"\n"<<"4.- Log out"<<endl;
+        cout<<"------------------------------------------------------------------"<<endl;
         cin>>option;
+        cout<<"------------------------------------------------------------------"<<endl;
         switch (option)
         {
         case 1:
-
+            addSoftware(user,s,userSoftwares);
             break;
         case 2:
-
+            deleteSoftware(userSoftwares);
             break;
         case 3:
+            seeSoftware(userSoftwares);
+            break;
+        case 4:
             cout<<"Hasta luego :)"<<endl;
             verification = false;
             break;
@@ -221,15 +355,30 @@ void menu(vector<Software*>& s, vector<User*>& u){
 //FUNCIÓN QUE TENDRÁ EL PROGRAMA GENERAL
 void system(vector<Software*>& s, vector<User*>& u){
     bool verification = true;
-    int option;
     while(verification){
-        cout<<"Bienvenidos al sistema!"<<"\n"<<"A continuación se desplegarán dos opciones, ingrese el numero que lo identifica:"<<endl;
+        int option;
+        cout<<"\nBienvenidos al sistema!"<<"\n"<<"A continuación se desplegarán dos opciones, ingrese el numero que lo identifica:"<<endl;
         cout<<"1.- Log in"<<"\n"<<"2.- Close system"<<endl;
         cin>>option;
+        cout<<"------------------------------------------------------------------"<<endl;
         if(option == 2){
             verification = false;
         }else{
-            menu(s,u);
+            if(option == 1){
+                cout<<"Ingresa tu usuario:"<<"\n";
+                string userName,password;
+                cin>>userName;
+                cout<<"Ingresa la contraseña:"<<"\n";
+                cin>>password;
+                User* user = userVerification(userName,password,u);
+                if(user != nullptr){
+                    menu(user,s,u);
+                    cout<<"------------------------------------------------------------------"<<endl;
+                }else{
+                    cout<<"Usuario no encontrado"<<endl;
+                    cout<<"------------------------------------------------------------------"<<endl;
+                }
+            }
         }
     }
 }
