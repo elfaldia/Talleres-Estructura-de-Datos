@@ -353,30 +353,40 @@ void menu(User* user,vector<Software*>& s, vector<User*>& u){
 }
 
 //FUNCIÓN QUE TENDRÁ EL PROGRAMA GENERAL
-void system(vector<Software*>& s, vector<User*>& u){
-    bool verification = true;
-    while(verification){
-        int option;
-        cout<<"\nBienvenidos al sistema!"<<"\n"<<"A continuación se desplegarán dos opciones, ingrese el numero que lo identifica:"<<endl;
-        cout<<"1.- Log in"<<"\n"<<"2.- Close system"<<endl;
-        cin>>option;
-        cout<<"------------------------------------------------------------------"<<endl;
-        if(option == 2){
+void system(vector<Software*>& s, vector<User*>& u) {
+    bool verification = true; 
+    while (verification) {
+        string option;
+        do {
+            cout << "------------------------------------------------------------------" << endl;
+            cout << "\nBienvenidos al sistema!" << "\n" << "A continuación se desplegarán dos opciones, ingrese el numero que lo identifica:" << endl;
+            cout << "1.- Log in" << "\n" << "2.- Close system" << endl;
+            cout << "------------------------------------------------------------------" << endl;
+            cin >> option;
+            cout << "------------------------------------------------------------------" << endl;
+
+            if(option != "1" && option != "2") {
+                cout << "Opción invalida, intenta nuevamente" << endl;
+            }
+
+        } while (option != "1" && option != "2"); 
+
+        if (option == "2") {
             verification = false;
-        }else{
-            if(option == 1){
-                cout<<"Ingresa tu usuario:"<<"\n";
-                string userName,password;
-                cin>>userName;
-                cout<<"Ingresa la contraseña:"<<"\n";
-                cin>>password;
-                User* user = userVerification(userName,password,u);
-                if(user != nullptr){
-                    menu(user,s,u);
-                    cout<<"------------------------------------------------------------------"<<endl;
-                }else{
-                    cout<<"Usuario no encontrado"<<endl;
-                    cout<<"------------------------------------------------------------------"<<endl;
+        } else {
+            if (option == "1") {
+                cout << "Ingresa tu usuario:" << "\n";
+                string userName, password;
+                cin >> userName;
+                cout << "Ingresa la contraseña:" << "\n";
+                cin >> password;
+                User* user = userVerification(userName, password, u);
+                if (user != nullptr) {
+                    menu(user, s, u);
+                    cout << "------------------------------------------------------------------" << endl;
+                } else {
+                    cout << "------------------------------------------------------------------" << endl;
+                    cout << "Usuario no encontrado" << endl;
                 }
             }
         }
