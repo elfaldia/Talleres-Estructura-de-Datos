@@ -271,7 +271,7 @@ void deleteSoftware(vector<Software*>& userS){
     if(userS.empty()){
         cout<<"No hay software en tu lista"<<endl;
     }else{
-        cout<<"\nA continuación se desplegarán los software disponibles actualemente: "<<endl;
+        cout<<"\nA continuación se desplegarán los software disponibles actualemente en la biblioteca general: "<<endl;
         cout<<"------------------------------------------------------------------"<<endl;
         for(int i = 0; i < userS.size(); i++){
             cout<<i<<".- (Nombre): "<<userS[i]->getName()<<" (Clasificación de edad): "<<userS[i]->getAgeClassificion()<<"  (Precio): "<<userS[i]->getPrice()<<endl;
@@ -317,6 +317,43 @@ void seeSoftware(vector<Software*>& u){
     }  
 }
 
+//Log de los software de juego
+void logGame(vector<Software*>& u,User* user){
+    Admin* admin = dynamic_cast<Admin*>(user);
+    vector<int> indices;
+    if(admin){
+        cout<<"-> Eres admin!"<<"\n"<<"A continuación se desplegaran los software de juego disponibles a los cuales podras ver las horas totales de cada uno."<<"\n"<<"Ingresa el indice del software."<<endl;
+        cout<<"------------------------------------------------------------------"<<endl;
+        for(int i = 0; i < u.size(); i++){
+            Games* games = dynamic_cast<Games*>(u[i]);
+            if(games){
+                cout<<i<<".- (Nombre): "<<u[i]->getName()<<" (Clasificación de edad): "<<u[i]->getAgeClassificion()<<"  (Precio): "<<u[i]->getPrice()<<endl;
+                indices.push_back(i);
+            }
+        }
+        cout<<"------------------------------------------------------------------"<<endl;
+        int index;
+        cin>>index;
+        int v =-1;
+        cout<<"------------------------------------------------------------------"<<endl;
+        for(int i = 0; i < indices.size(); i++){
+            if(indices[i] == index){
+                Games* games = dynamic_cast<Games*>(u[index]);
+                cout<<"-> El juego "<<games->getName()<<" se ha jugado "<<games->playedtHours()<<" horas."<<endl;
+                cout<<"------------------------------------------------------------------"<<endl;
+                v++;
+                break;
+            }
+        }
+        if(v == -1){
+            cout<<"El indice no fue ingresado correctamente."<<endl;
+        }
+    }else{
+        cout<<"-> No tienes permiso para ingresar."<<endl;
+        cout<<"------------------------------------------------------------------"<<endl;
+    }
+}
+
 //MENU CON SUS OPCIONES
 void menu(User* user,vector<Software*>& s, vector<User*>& u){
     bool verification = true;
@@ -325,8 +362,8 @@ void menu(User* user,vector<Software*>& s, vector<User*>& u){
     while(verification){
 
         cout<<"------------------------------------------------------------------"<<endl;
-        cout<<"Bienvenindo -> "<<user->getUser()<<"\n"<<"Opciones: "<<endl;
-        cout<<"1.- Agregar Software."<<"\n"<<"2.- Eliminar Software"<<"\n"<<"3.- Ver Softwares actuales"<<"\n"<<"4.- Log out"<<endl;
+        cout<<"Bienvenindo a tu biblioteca -> "<<user->getUser()<<"\n"<<"Opciones: "<<endl;
+        cout<<"1.- Comprar software."<<"\n"<<"2.- Eliminar Software."<<"\n"<<"3.- Ver Softwares actuales en tu biblioteca."<<"\n"<<"4.- Ingresar al log de los softaware de juego."<<"\n"<<"5.- Log out"<<endl;
         cout<<"------------------------------------------------------------------"<<endl;
         cin>>option;
         cout<<"------------------------------------------------------------------"<<endl;
@@ -342,6 +379,9 @@ void menu(User* user,vector<Software*>& s, vector<User*>& u){
             seeSoftware(userSoftwares);
             break;
         case 4:
+            logGame(s,user);
+            break;
+        case 5:
             cout<<"Hasta luego :)"<<endl;
             verification = false;
             break;
