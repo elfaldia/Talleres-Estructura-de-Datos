@@ -1,8 +1,11 @@
 #include <iostream>
+#include <stdio.h>
+#include "conectFour.h"
 using namespace std;
 
 int main()
 {
-    cout<<"hola mundo\n";
+    conectFour game;
+	game.printMenu();
     return 0;
 }
