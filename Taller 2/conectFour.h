@@ -36,6 +36,7 @@ conectFour::~conectFour()
         delete[] this->board[i];
     }
     delete[] this->board;
+    cout<<"Thanks for playing!!\n"<<endl;
 }
 
 void conectFour::printBoard()
@@ -56,9 +57,9 @@ void conectFour::printBoard()
 
 int conectFour::printMenu()
 {
+    cout << "\nHello, welcome to the game Connect 4!" <<endl;
     while (true) {
         string option;
-        cout << "\nHello, welcome to the game Connect 4!" <<endl;
         cout << "The difficulty levels that exist will be displayed below. Enter the number you want:\n1.- Easy.\n2.- Normal.\n3.- Hard.\n" <<endl;
 
         try {
@@ -76,10 +77,10 @@ int conectFour::printMenu()
                     return optionNumber;
                     break;
                 default:
-                    cout <<"Invalid menu, try again."<<endl;
+                    cout <<"Invalid menu, try again.\n"<<endl;
             }
         } catch (const invalid_argument& e) {
-            cerr << "Error: Invalid entry. Please enter a valid number." << endl;
+            cerr << "Error: Invalid entry. Please enter a valid number.\n" << endl;
         }
     }return -1;
 }
