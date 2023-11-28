@@ -36,7 +36,6 @@ conectFour::~conectFour()
         delete[] this->board[i];
     }
     delete[] this->board;
-    cout<<"Thanks for playing!!\n"<<endl;
 }
 
 void conectFour::printBoard()

@@ -6,8 +6,7 @@ using namespace std;
 int main()
 {
     conectFour game;
-    //game.printBoard();
-	game.printMenu();
-    game.~conectFour();
+    game.printBoard();
+	//game.printMenu();
     return 0;
 }
