@@ -7,6 +7,6 @@ int main()
 {
     conectFour game;
     game.printBoard();
-	//game.printMenu();
+	game.printMenu();
     return 0;
 }
