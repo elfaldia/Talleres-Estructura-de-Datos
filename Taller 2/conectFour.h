@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <random>
+#include <cstring>
+#pragma once
 using namespace std;
 
 class conectFour
@@ -9,6 +11,7 @@ private:
     int row;
     int column;
     char** board;
+
 public:
     conectFour();
     ~conectFour();
@@ -107,12 +110,14 @@ void conectFour::easyMode()
 {   
     char player = 'X' , ia = 'O';
     cout<<"welcome to the easy mode conect 4!\nlest's begin!\n"<<endl;
+
     while(true)
     {
 
         // comprobacion de que exista un empate
         if(isBoardFull())
         {
+            printBoard();
             cout<<"--------------------\nUh... it's a tie!\n--------------------\n"<<endl;
             resetBoard();
             break;
@@ -188,6 +193,7 @@ bool conectFour::playerMovements(char player, int index)
 
 bool conectFour::easyIa(char ia)
 {
+
     cout<<"CPU's turn...\n"<<endl;
     random_device rd;
     mt19937 gen(rd());
@@ -211,13 +217,11 @@ void conectFour::resetBoard()
     }
 }
 
-bool conectFour::isBoardFull()
-{
-    for (int i = 0; i < row; i++) {
-        for (int j = 0; j < column; j++) {
-            if (board[i][j] == ' ') {
-                return false;
-            }
+bool conectFour::isBoardFull() {
+    // esta funcion verifica si las filas superiores estan todas llenas
+    for (int j = 0; j < column; j++) {
+        if (board[0][j] == ' ') {
+            return false;
         }
     }
     return true;
