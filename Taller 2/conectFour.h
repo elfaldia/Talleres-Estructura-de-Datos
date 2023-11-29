@@ -2,6 +2,7 @@
 #include <string>
 #include <random>
 #include <cstring>
+#include <climits>
 #pragma once
 using namespace std;
 
@@ -20,13 +21,18 @@ public:
     void resetBoard();
     bool isBoardFull();
     bool checkFourInLine(char player);
-
+    char opponent(char player);
     //----------- easy mode -----------
-
     bool playerMovements(char jugador,int index);
     bool easyIa(char ia);
     void easyMode();
+    //---------------------------------
 
+    //----------- normal mode -----------
+    int minimax(char player, int depth);
+    int minimaxWithAlphaBeta(char player, int depth, int alpha, int beta);
+    bool makeMove(char player, int index);
+    void normalMode();
     //---------------------------------
 };
 
@@ -88,7 +94,7 @@ void conectFour::printMenu()
                     easyMode();
                     break;
                 case 2:
-                    
+                    normalMode();
                     break;
                 case 3:
                     
@@ -264,4 +270,59 @@ bool conectFour::checkFourInLine(char player)
         }
     }
     return false;
+}
+
+bool conectFour::makeMove(char player, int index) {
+    for (int i = row - 1; i >= 0; i--) {
+        if (board[i][index] == ' ') {
+            board[i][index] = player;
+            return true;
+        }
+    }
+    return false;
+}
+
+int conectFour::minimax(char player, int depth) {
+    if (depth == 0 || isBoardFull()) {
+        return 0;
+    }
+
+    int bestScore = INT_MIN;
+    for (int i = 0; i < column; i++) {
+        if (makeMove(player, i)) {
+            int score = minimax(opponent(player), depth - 1);
+            makeMove(player, i);
+            bestScore = max(bestScore, score);
+        }
+    }
+    return bestScore;
+}
+
+char conectFour::opponent(char player) {
+    return player == 'X' ? 'O' : 'X';
+}
+
+void conectFour::normalMode() {
+    char player = 'X';
+    while (true) {
+        printBoard();
+        cout << "Player " << player << ", make your move (0-6): ";
+        int index;
+        cin >> index;
+        if (!makeMove(player, index)) {
+            cout << "Invalid move.\n";
+            continue;
+        }
+        if (checkFourInLine(player)) {
+            printBoard();
+            cout << "Player " << player << " wins!\n";
+            break;
+        }
+        if (isBoardFull()) {
+            printBoard();
+            cout << "The game is a tie!\n";
+            break;
+        }
+        player = opponent(player);
+    }
 }
