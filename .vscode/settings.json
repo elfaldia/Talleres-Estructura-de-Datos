@@ -48,5 +48,5 @@
         "cinttypes": "cpp",
         "typeinfo": "cpp"
     },
-    "editor.inlineSuggest.showToolbar": "always"
+    "editor.inlineSuggest.showToolbar": "onHover"
 }
