@@ -1,9 +1,8 @@
-#ifndef TREE_H
-#define TREE_H
+#pragma once
 #include "conectFour.h"
+#include "Node.h"
 #include <iostream>
 #include <climits>
-#include "Node.h"
 using namespace std;
 
 class Tree
@@ -46,19 +45,19 @@ void Tree::generateTree(conectFour& game, int depth)
 }
 
 int Tree::minimax(Node* node, int depth, bool maximizingPlayer,conectFour& game) {
-    if (depth == 0 || node->value == game.getWinnerValue() || game.isBoardFull()) {
+    if (depth == 0 || game.isBoardFull()) {
         return game.evaluateBoard();
     }
 
     if (maximizingPlayer) {
-        int maxEval = INT_MIN;
+        int maxEval = 0;
         for (Node* child : node->children) {
             int eval = minimax(child, depth - 1, false,game);
             maxEval = max(maxEval, eval);
         }
         return maxEval;
     } else {
-        int minEval = INT_MAX;
+        int minEval = 100;
         for (Node* child : node->children) {
             child->value = minimax(child, depth - 1, false, game);
             minEval = min(minEval, child->value);
@@ -69,7 +68,7 @@ int Tree::minimax(Node* node, int depth, bool maximizingPlayer,conectFour& game)
 
 int Tree::findBetterMovement() {
     int betterMovement = -1;
-    int betterValue = INT_MIN;
+    int betterValue = 0;
 
     for (Node* child : root->children) {
         if (child->value > betterValue) {
@@ -77,7 +76,5 @@ int Tree::findBetterMovement() {
             betterMovement = child->column;
         }
     }
-
     return betterMovement;
 }
-#endif // TREE_H

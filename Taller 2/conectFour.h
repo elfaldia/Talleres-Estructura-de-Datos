@@ -1,7 +1,4 @@
-#ifndef CONECTFOUR_H
-#define CONECTFOUR_H
-
-#include "Tree.h"
+#pragma once
 #include <stdio.h>
 #include <iostream>
 #include <vector>
@@ -11,8 +8,6 @@
 #include <sstream>
 
 using namespace std;
-
-class Tree;
 
 class conectFour
 {
@@ -27,7 +22,6 @@ public:
 
     //---- funciones de utilidad para el juego ----
     void printBoard();
-    void printMenu(); 
     void resetBoard();
     bool isBoardFull();
     bool checkFourInLine(char player);
@@ -35,8 +29,6 @@ public:
     int getColumn();
     void removeTab(int col);
     int evaluateLine(char c1, char c2, char c3, char c4)const;
-    char evaluateWinner(char c1, char c2, char c3, char c4) const;
-    char getWinnerValue()const;
     int evaluateBoard()const;
     //---------------------------------------------
 
@@ -46,14 +38,14 @@ public:
     void easyMode();
     //---------------------------------
 
-    void letsPlay(int depth);
-
 };
 
 conectFour::conectFour()
 {
     this->column = 7;
     this->row = 6;
+    this->board = nullptr;
+
     this->board = new char*[row];
     for(int i = 0; i < row; i++){
         this->board[i] = new char[column];
@@ -67,19 +59,24 @@ conectFour::conectFour()
 
 conectFour::~conectFour()
 {
-    for(int i = 0; i < column; i++){
-        delete[] this->board[i];
+    if (board != nullptr) {
+        // Liberar memoria de cada fila
+        for (int i = 0; i < row; ++i) {
+            delete[] board[i];
+        }
+
+        // Liberar memoria de la matriz
+        delete[] board;
     }
-    delete[] this->board;
 }
 
 int conectFour::getColumn(){return this->column; }
 
 void conectFour::removeTab(int col)
 {
-    for (int i = row - 1; i >= 0; --i) {
-        if (board[i][col] != ' ') {
-            this->board[i][col] = ' '; // Quita la última ficha en la columna
+    for (int i = 0; i < row; ++i) {
+        if (board[i][col] == 'O') {
+            this->board[i][col] = ' '; // Restablecer la última ficha de la CPU en la columna a un espacio vacío
             break;
         }
     }
@@ -87,25 +84,26 @@ void conectFour::removeTab(int col)
 
 int conectFour::evaluateLine(char c1, char c2, char c3, char c4)const
 {
-     // Aquí, otorgamos puntos si hay al menos una ficha del jugador humano y ninguna de la CPU.
+     // Otorgamos puntos si hay al menos una ficha del jugador humano y ninguna de la CPU.
     int score = 0;
 
-    if (c1 == 'X') score++;
-    if (c2 == 'X') score++;
-    if (c3 == 'X') score++;
-    if (c4 == 'X') score++;
+    if (c1 == 'X') score += 25;
+    if (c2 == 'X') score += 25;
+    if (c3 == 'X') score += 25;
+    if (c4 == 'X') score += 25;
 
-    if (c1 == 'O') score--;
-    if (c2 == 'O') score--;
-    if (c3 == 'O') score--;
-    if (c4 == 'O') score--;
+    if (c1 == 'O') score -= 25;
+    if (c2 == 'O') score -= 25;
+    if (c3 == 'O') score -= 25;
+    if (c4 == 'O') score -= 25;
 
     return score;
 }
 
 int conectFour::evaluateBoard() const {
  
-    // Aquí se muestra una evaluación simple contando las fichas en línea.
+    // Mostramos una evaluación simple contando las fichas en línea.
+
     int score = 0;
 
     // Evaluar filas
@@ -136,62 +134,10 @@ int conectFour::evaluateBoard() const {
         }
     }
 
+    // Asegurar que el score esté en el rango de 0 a 100
+    score = max(0, min(100, score));
+
     return score;
-}
-
-char conectFour::evaluateWinner(char c1, char c2, char c3, char c4) const
-{
-    // Devuelve el valor del ganador ('X' o 'O') o ' ' si no hay ganador.
-    if (c1 == c2 && c2 == c3 && c3 == c4) {
-        return c1;
-    } else {
-        return ' ';
-    }
-}
-
-char conectFour::getWinnerValue() const {
-
-    // Evaluar filas
-    for (int i = 0; i < row; ++i) {
-        for (int j = 0; j <= column - 4; ++j) {
-            char winner = evaluateWinner(board[i][j], board[i][j + 1], board[i][j + 2], board[i][j + 3]);
-            if (winner != ' ') {
-                return winner;
-            }
-        }
-    }
-
-    // Evaluar columnas
-    for (int j = 0; j < column; ++j) {
-        for (int i = 0; i <= row - 4; ++i) {
-            char winner = evaluateWinner(board[i][j], board[i + 1][j], board[i + 2][j], board[i + 3][j]);
-            if (winner != ' ') {
-                return winner;
-            }
-        }
-    }
-
-    // Evaluar diagonales ascendentes
-    for (int i = 3; i < row; ++i) {
-        for (int j = 0; j <= column - 4; ++j) {
-            char winner = evaluateWinner(board[i][j], board[i - 1][j + 1], board[i - 2][j + 2], board[i - 3][j + 3]);
-            if (winner != ' ') {
-                return winner;
-            }
-        }
-    }
-
-    // Evaluar diagonales descendentes
-    for (int i = 0; i <= row - 4; ++i) {
-        for (int j = 0; j <= column - 4; ++j) {
-            char winner = evaluateWinner(board[i][j], board[i + 1][j + 1], board[i + 2][j + 2], board[i + 3][j + 3]);
-            if (winner != ' ') {
-                return winner;
-            }
-        }
-    }
-
-    return ' '; // No hay ganador
 }
 
 void conectFour::printBoard()
@@ -212,80 +158,7 @@ void conectFour::printBoard()
     cout<<"[0 1 2 3 4 5 6]\n"<<endl;
 }
 
-void conectFour::printMenu()
-{
-    cout << "\nHello, welcome to the game Connect 4!\n" <<endl;
-    int v = true;
-    while (v) {
-        string option;
-        cout << "The difficulty levels that exist will be displayed below. Enter the number you want:\n1.- Easy.\n2.- Normal.\n3.- Hard.\n4.- Exit\n" <<endl;
-
-        try {
-            cin >> option;
-            int optionNumber =stoi(option);
-
-            switch (optionNumber) {
-                case 1:
-                   
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    
-                    break;
-                case 4:
-                    cout<<"Thanks for playing with us!\n"<<endl;
-                    v = false;
-                    break;
-                default:
-                    cout <<"Invalid menu, try again.\n"<<endl;
-            }
-        } catch (const invalid_argument& e) {
-            cerr << "Error: Invalid entry. Please enter a valid number.\n" << endl;
-        }
-    }
-}
-
-void conectFour::letsPlay(int depth)
-{
-    Tree tree;
-    while (true) {
-        // Turno del jugador
-        int playerColumn;
-        cout << "Ingresa tu movimiento (0-6): ";
-        cin >> playerColumn;
-
-        // Realizar el movimiento del jugador
-        if (playerMovements('X',playerColumn)) {
-            printBoard();
-            if (checkFourInLine('X')) {
-                cout << "¡Felicidades! ¡Has ganado!" << endl;
-                break;
-            }
-        } else {
-            cout << "Columna llena. Elige otra columna." << endl;
-            continue;
-        }
-
-        // Turno de la computadora
-        tree.generateTree(*this, depth); // Ajusta la profundidad según sea necesario
-        int cpuColumn = tree.findBetterMovement();
-
-        // Realizar el movimiento de la CPU
-        if (playerMovements('O', cpuColumn)) {
-            printBoard();
-            if (checkFourInLine('O')) {
-                cout << "¡La CPU ha ganado!" << endl;
-                break;
-            }
-        } else {
-            cout << "Error en el movimiento de la CPU." << endl;
-        }
-    }
-    resetBoard();
-}
-
-/*void conectFour::easyMode()
+void conectFour::easyMode()
 {   
     char player = 'X' , ia = 'O';
     cout<<"welcome to the easy mode conect 4!\nlest's begin!\n"<<endl;
@@ -358,7 +231,7 @@ void conectFour::letsPlay(int depth)
             }
         }
     }
-}*/
+}
 
 bool conectFour::isColumnFull(int col)
 {
@@ -456,5 +329,3 @@ bool conectFour::checkFourInLine(char player)
     }
     return false;
 }
-
-#endif // CONECTFOUR_H
