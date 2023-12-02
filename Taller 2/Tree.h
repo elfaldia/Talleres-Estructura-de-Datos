@@ -13,8 +13,11 @@ public:
     Tree();
     ~Tree();
     void generateTree(conectFour& game, int depth);
-    int minimax(Node* node, int depth, bool maximizingPlayer, conectFour& game);
+    void generateTreeRec(Node* node, conectFour& game, int depth, bool maximizingPlayer);
+    int minimax(Node* node, bool maximizingPlayer);
     int findBetterMovement();
+    int findMediumMovement();
+    int normalizeScore(int score);
 };
 
 Tree::Tree()
@@ -24,57 +27,119 @@ Tree::Tree()
 
 Tree::~Tree()
 {
-    delete root;
+    for (Node* child : root->children) {
+        delete child;
+    }
 }
 
-void Tree::generateTree(conectFour& game, int depth)
-{
-    root = new Node();
+void Tree::generateTree(conectFour& game, int depth) {
+        root = new Node();
+        generateTreeRec(root, game, depth, true);
+}
 
-    for (int col = 0; col < game.getColumn(); col++) {
+void Tree::generateTreeRec(Node* node, conectFour& game, int depth, bool maximizingPlayer) {
+    if (depth == 0 || game.isBoardFull() || game.checkFourInLine('X') || game.checkFourInLine('O')) {
+        node->value = normalizeScore(game.evaluateBoard());
+        return;
+    }
+
+    for (int col = 0; col < game.getColumn(); ++col) {
         if (!game.isColumnFull(col)) {
-            game.playerMovements('O', col); // Simular el movimiento de la CPU
+            conectFour copyGame(game);
+            if (maximizingPlayer) {
+                copyGame.playerMovements('X',col);
+            } else {
+                copyGame.playerMovements('O',col);
+            }
+
             Node* child = new Node();
             child->column = col;
-            child->value = minimax(child, depth - 1, false, game);
-            child->father = root;
-            root->children.push_back(child);
-            game.removeTab(col); // Deshacer el movimiento simulado
+            node->children.push_back(child);
+
+            generateTreeRec(child, copyGame, depth - 1, !maximizingPlayer);
+        }
+    }
+
+    // Actualizar el valor del nodo padre después de que todos los nodos hijos hayan sido evaluados
+    if (maximizingPlayer) {
+        node->value = INT_MIN;
+        for (Node* child : node->children) {
+            node->value = max(node->value, child->value);
+        }
+    } else {
+        node->value = INT_MAX;
+        for (Node* child : node->children) {
+            node->value = min(node->value, child->value);
         }
     }
 }
 
-int Tree::minimax(Node* node, int depth, bool maximizingPlayer,conectFour& game) {
-    if (depth == 0 || game.isBoardFull()) {
-        return game.evaluateBoard();
+int Tree::minimax(Node* node, bool maximizingPlayer) {
+    if (node->children.empty()) {
+            return node->value;
     }
 
     if (maximizingPlayer) {
-        int maxEval = 0;
+        int maxEval = INT_MIN;
         for (Node* child : node->children) {
-            int eval = minimax(child, depth - 1, false,game);
+            int eval = minimax(child, false);
             maxEval = max(maxEval, eval);
         }
         return maxEval;
     } else {
-        int minEval = 100;
+        int minEval = INT_MAX;
         for (Node* child : node->children) {
-            child->value = minimax(child, depth - 1, false, game);
-            minEval = min(minEval, child->value);
+            int eval = minimax(child, true);
+            minEval = min(minEval, eval);
         }
         return minEval;
     }
 }
 
+
 int Tree::findBetterMovement() {
-    int betterMovement = -1;
-    int betterValue = 0;
+    int bestMove = -1;
+    int bestValue = INT_MIN;
 
     for (Node* child : root->children) {
-        if (child->value > betterValue) {
-            betterValue = child->value;
-            betterMovement = child->column;
+        int eval = minimax(child, false);
+        if (eval > bestValue) {
+            bestValue = eval;
+            bestMove = child->column;
         }
     }
-    return betterMovement;
+
+    return bestMove;
+}
+
+int Tree::findMediumMovement() {
+    int bestMove = -1;
+    int bestValue = INT_MIN;
+
+    // Encuentra la mejor jugada y su valor
+    for (Node* child : root->children) {
+        int eval = minimax(child, false);
+        if (eval > bestValue) {
+            bestValue = eval;
+            bestMove = child->column;
+        }
+    }
+
+    // Encuentra una jugada que no sea la mejor, pero tenga un valor entre el 50% y el 100% del mejor
+    int mediumMove = -1;
+
+    for (Node* child : root->children) {
+        int eval = minimax(child, false);
+        if (eval > 0.5 * bestValue && eval <= bestValue) {
+            mediumMove = child->column;
+            break;
+        }
+    }
+
+    // Si no se encuentra una jugada media, devuelve la mejor jugada
+    return (mediumMove != -1) ? mediumMove : bestMove;
+}
+
+int Tree::normalizeScore(int score) {
+    return static_cast<int>((score + 1000.0) / 20.0);
 }

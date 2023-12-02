@@ -9,16 +9,18 @@
 
 using namespace std;
 
+const int COLUMN = 7;
+const int ROW = 6;
+const char EMPTY = ' ';
+const char PLAYER = 'X';
+const char CPU = 'O';
+
 class conectFour
 {
 private:
-    int row;
-    int column;
-    char** board;
-
+    char board[ROW][COLUMN];
 public:
     conectFour();
-    ~conectFour();
 
     //---- funciones de utilidad para el juego ----
     void printBoard();
@@ -26,10 +28,13 @@ public:
     bool isBoardFull();
     bool checkFourInLine(char player);
     bool isColumnFull(int col);
-    int getColumn();
     void removeTab(int col);
-    int evaluateLine(char c1, char c2, char c3, char c4)const;
-    int evaluateBoard()const;
+    int evaluateLine(char player, int row, int col, int rowDirection, int colDirection);
+    int evaluateBoard();
+    int getColumn();
+    int getNumberOfPieces(int column, char piece);
+    int getNumberOfEmptySpaces(int column);
+    int evaluateLines(char player);
     //---------------------------------------------
 
     //----------- easy mode -----------
@@ -42,39 +47,21 @@ public:
 
 conectFour::conectFour()
 {
-    this->column = 7;
-    this->row = 6;
-    this->board = nullptr;
-
-    this->board = new char*[row];
-    for(int i = 0; i < row; i++){
-        this->board[i] = new char[column];
-    }
-    for (int i = 0; i < row; ++i) {
-        for (int j = 0; j < column; ++j) {
-            this-> board[i][j] = ' '; 
-        }
+    for (int i = 0; i < ROW; i++) {
+	    for (int j = 0; j < COLUMN; j++) {
+		    this->board[i][j] = ' ';
+	    }
     }
 }
 
-conectFour::~conectFour()
-{
-    if (board != nullptr) {
-        // Liberar memoria de cada fila
-        for (int i = 0; i < row; ++i) {
-            delete[] board[i];
-        }
-
-        // Liberar memoria de la matriz
-        delete[] board;
-    }
+int conectFour::getColumn(){
+    int c = COLUMN;
+    return c;
 }
-
-int conectFour::getColumn(){return this->column; }
 
 void conectFour::removeTab(int col)
 {
-    for (int i = 0; i < row; ++i) {
+    for (int i = 0; i < ROW; ++i) {
         if (board[i][col] == 'O') {
             this->board[i][col] = ' '; // Restablecer la última ficha de la CPU en la columna a un espacio vacío
             break;
@@ -82,71 +69,96 @@ void conectFour::removeTab(int col)
     }
 }
 
-int conectFour::evaluateLine(char c1, char c2, char c3, char c4)const
-{
-     // Otorgamos puntos si hay al menos una ficha del jugador humano y ninguna de la CPU.
+int conectFour::evaluateLine(char player, int row, int col, int rowDirection, int colDirection) {
     int score = 0;
+    char opponent = (player == PLAYER) ? CPU : PLAYER;
 
-    if (c1 == 'X') score += 25;
-    if (c2 == 'X') score += 25;
-    if (c3 == 'X') score += 25;
-    if (c4 == 'X') score += 25;
+    int countPlayer = 0;
+    int countEmpty = 0;
+    for (int i = 0; i < 4; ++i) {
+        int r = row + i * rowDirection;
+        int c = col + i * colDirection;
 
-    if (c1 == 'O') score -= 25;
-    if (c2 == 'O') score -= 25;
-    if (c3 == 'O') score -= 25;
-    if (c4 == 'O') score -= 25;
+        if (board[r][c] == player) {
+            countPlayer++;
+        } else if (board[r][c] == EMPTY) {
+            countEmpty++;
+        }
+    }
+
+    if (countPlayer == 4) {
+        score += 1000;
+    } else if (countPlayer == 3 && countEmpty == 1) {
+        score += 100;
+    } else if (countPlayer == 2 && countEmpty == 2) {
+        score += 10;
+    }
+
+    int countOpponent = 0;
+    countEmpty = 0;
+    for (int i = 0; i < 4; ++i) {
+        int r = row + i * rowDirection;
+        int c = col + i * colDirection;
+
+        if (board[r][c] == opponent) {
+            countOpponent++;
+        } else if (board[r][c] == EMPTY) {
+            countEmpty++;
+        }
+    }
+
+    if (countOpponent == 3 && countEmpty == 1) {
+        score -= 90;
+    } else if (countOpponent == 2 && countEmpty == 2) {
+        score -= 9;
+    }
 
     return score;
 }
 
-int conectFour::evaluateBoard() const {
- 
-    // Mostramos una evaluación simple contando las fichas en línea.
+int conectFour::evaluateLines(char player) {
+        int score = 0;
+        for (int i = 0; i < ROW; ++i) {
+            for (int j = 0; j <= COLUMN - 4; ++j) {
+                score += evaluateLine(player, i, j, 0, 1);
+            }
+        }
 
+        for (int i = 0; i <= ROW - 4; ++i) {
+            for (int j = 0; j < COLUMN; ++j) {
+                score += evaluateLine(player, i, j, 1, 0);
+            }
+        }
+
+        for (int i = 0; i <= ROW - 4; ++i) {
+            for (int j = 0; j <= COLUMN - 4; ++j) {
+                score += evaluateLine(player, i, j, 1, 1);
+            }
+        }
+
+        for (int i = 0; i <= ROW - 4; ++i) {
+            for (int j = 3; j < COLUMN; ++j) {
+                score += evaluateLine(player, i, j, 1, -1);
+            }
+        }
+
+        return score;
+    }
+
+int conectFour::evaluateBoard() {
     int score = 0;
-
-    // Evaluar filas
-    for (int i = 0; i < row; ++i) {
-        for (int j = 0; j <= column - 4; ++j) {
-            score += evaluateLine(board[i][j], board[i][j + 1], board[i][j + 2], board[i][j + 3]);
-        }
-    }
-
-    // Evaluar columnas
-    for (int j = 0; j < column; ++j) {
-        for (int i = 0; i <= row - 4; ++i) {
-            score += evaluateLine(board[i][j], board[i + 1][j], board[i + 2][j], board[i + 3][j]);
-        }
-    }
-
-    // Evaluar diagonales ascendentes
-    for (int i = 3; i < row; ++i) {
-        for (int j = 0; j <= column - 4; ++j) {
-            score += evaluateLine(board[i][j], board[i - 1][j + 1], board[i - 2][j + 2], board[i - 3][j + 3]);
-        }
-    }
-
-    // Evaluar diagonales descendentes
-    for (int i = 0; i <= row - 4; ++i) {
-        for (int j = 0; j <= column - 4; ++j) {
-            score += evaluateLine(board[i][j], board[i + 1][j + 1], board[i + 2][j + 2], board[i + 3][j + 3]);
-        }
-    }
-
-    // Asegurar que el score esté en el rango de 0 a 100
-    score = max(0, min(100, score));
-
-    return score;
+        score += evaluateLines(PLAYER);
+        score -= evaluateLines(CPU);
+        return score;
 }
 
 void conectFour::printBoard()
 {
-    for (int i = 0; i < row; ++i) {
-        for (int j = 0; j < column; ++j) {
+    for (int i = 0; i < ROW; ++i) {
+        for (int j = 0; j < COLUMN; ++j) {
             if (j == 0) {
                 cout <<"["<< board[i][j]<<" "; 
-            }else if(j == column-1){
+            }else if(j == COLUMN-1){
                 cout<< board[i][j]<<"]"; 
             }else{
                 cout<< board[i][j]<<" "; 
@@ -233,9 +245,29 @@ void conectFour::easyMode()
     }
 }
 
+int conectFour::getNumberOfPieces(int column, char piece) {
+  int count = 0;
+  for (int row = 0; row < ROW; row++) {
+    if (board[row][column] == piece) {
+      count++;
+    }
+  }
+  return count;
+}
+
+int conectFour::getNumberOfEmptySpaces(int column) {
+  int count = 0;
+  for (int row = 0; row < ROW; row++) {
+    if (board[row][column] == EMPTY) {
+      count++;
+    }
+  }
+  return count;
+}
+
 bool conectFour::isColumnFull(int col)
 {
-    for (int i = 0; i < row; ++i) {
+    for (int i = 0; i < ROW; ++i) {
         if (board[i][col] == ' ') {
             return false; // Si encuentra al menos un espacio vacío, la columna no está llena
         }
@@ -245,7 +277,8 @@ bool conectFour::isColumnFull(int col)
 
 bool conectFour::playerMovements(char player, int index)
 {
-    for(int i = row -1; i >= 0;i--){
+
+    for(int i = ROW -1; i >= 0;i--){
         if(this -> board[i][index] == ' '){
             this -> board[i][index] = player;
             return true;
@@ -262,7 +295,7 @@ bool conectFour::easyIa(char ia)
     uniform_int_distribution<int> dis(0, 6);
     int index = dis(gen);
 
-    for(int i = row -1; i >= 0;i--){
+    for(int i = ROW -1; i >= 0;i--){
         if(this -> board[i][index] == ' '){
             board[i][index] = ia;
             return true;
@@ -272,8 +305,8 @@ bool conectFour::easyIa(char ia)
 
 void conectFour::resetBoard()
 {
-    for (int i = 0; i < row; i++) {
-        for (int j = 0; j < column; j++) {
+    for (int i = 0; i < ROW; i++) {
+        for (int j = 0; j < COLUMN; j++) {
             this->board[i][j] = ' ';
         }
     }
@@ -281,8 +314,8 @@ void conectFour::resetBoard()
 
 bool conectFour::isBoardFull() {
     // esta funcion verifica si las filas superiores estan todas llenas
-    for (int i = 0; i < row; i++) {
-        for (int j = 0; j < column; j++) {
+    for (int i = 0; i < ROW; i++) {
+        for (int j = 0; j < COLUMN; j++) {
             if (board[i][j] == ' ') {
                 return false;
             }
@@ -294,8 +327,8 @@ bool conectFour::isBoardFull() {
 bool conectFour::checkFourInLine(char player)
 {
     // se verificar en horizontal
-    for (int i = 0; i < row; i++) {
-        for (int j = 0; j <= column - 4; j++) {
+    for (int i = 0; i < ROW; i++) {
+        for (int j = 0; j <= COLUMN - 4; j++) {
             if (board[i][j] == player && board[i][j + 1] == player && board[i][j + 2] == player && board[i][j + 3] == player) {
                 return true;
             }
@@ -303,8 +336,8 @@ bool conectFour::checkFourInLine(char player)
     }
 
     // se verificar en vertical
-    for (int i = 0; i <= row - 4; i++) {
-        for (int j = 0; j < column; j++) {
+    for (int i = 0; i <= ROW - 4; i++) {
+        for (int j = 0; j < COLUMN; j++) {
             if (board[i][j] == player && board[i + 1][j] == player && board[i + 2][j] == player && board[i + 3][j] == player) {
                 return true;
             }
@@ -312,16 +345,16 @@ bool conectFour::checkFourInLine(char player)
     }
 
     // se verifica la diagonal de izquierda a derecha
-    for (int i = 0; i <= row - 4; i++) {
-        for (int j = 0; j <= column - 4; j++) {
+    for (int i = 0; i <= ROW - 4; i++) {
+        for (int j = 0; j <= COLUMN - 4; j++) {
             if (board[i][j] == player && board[i + 1][j + 1] == player && board[i + 2][j + 2] == player && board[i + 3][j + 3] == player) {
                 return true;
             }
         }
     }
     // se verifica la diagonal de derecha a izquierda
-    for (int i = 0; i <= row - 4; i++) {
-        for (int j = 3; j < column; j++) {
+    for (int i = 0; i <= ROW - 4; i++) {
+        for (int j = 3; j < COLUMN; j++) {
             if (board[i][j] == player && board[i + 1][j - 1] == player && board[i + 2][j - 2] == player && board[i + 3][j - 3] == player) {
                 return true;
             }

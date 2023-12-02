@@ -4,7 +4,7 @@
 #include "Tree.h"
 using namespace std;
 
-void letsPlay(conectFour game)
+void letsPlay(conectFour game, int mode)
 {
     Tree tree;
     char player = 'X' , ia = 'O';
@@ -63,11 +63,15 @@ void letsPlay(conectFour game)
         }
         // Turno de la computadora
         tree.generateTree(game, 4); // Ajusta la profundidad según sea necesario
-
-        int cpuColumn = tree.findBetterMovement();
+        int cpuColumn;
+        //la difilcutad dira la jugada adecuada 
+        if(mode==1){
+            cpuColumn = tree.findMediumMovement();
+        }else if(mode == 2){
+            cpuColumn = tree.findBetterMovement();
+        }
 
         if (game.playerMovements('O', cpuColumn)) {
-            game.printBoard();
             if (game.checkFourInLine('O')) {
                 cout << "¡La CPU ha ganado!" << endl;
                 break;
@@ -89,16 +93,18 @@ void printMenu(conectFour game)
         try {
             cin >> option;
             int optionNumber =stoi(option);
-
+            int mode;
             switch (optionNumber) {
                 case 1:
                     game.easyMode();
                     break;
                 case 2:
-                    letsPlay(game);
+                    mode = 1;
+                    letsPlay(game,mode);
                     break;
                 case 3:
-                    
+                    mode = 2;
+                    letsPlay(game,mode);
                     break;
                 case 4:
                     cout<<"Thanks for playing with us!\n"<<endl;
@@ -117,5 +123,6 @@ int main()
 {
     conectFour game;
     printMenu(game);
+
     return 0;
 }
