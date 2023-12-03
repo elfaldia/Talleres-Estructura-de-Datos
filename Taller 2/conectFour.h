@@ -6,6 +6,7 @@
 #include <array>
 #include <random>
 #include <sstream>
+#include <fstream>
 
 using namespace std;
 
