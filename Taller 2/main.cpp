@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdio.h>
+#include <chrono>
 #include "conectFour.h"
 #include "Tree.h"
 using namespace std;
@@ -9,7 +10,7 @@ void letsPlayMinimax(conectFour game, int mode)
     Tree tree;
     char player = 'X' , ia = 'O';
     cout<<"welcome to the easy mode conect 4!\nlest's begin!\n"<<endl;
-
+    auto start_time = chrono::high_resolution_clock::now();
     while(true)
     {
 
@@ -68,7 +69,14 @@ void letsPlayMinimax(conectFour game, int mode)
         if(mode==1){
             cpuColumn = tree.findMediumMovement();
         }else if(mode == 2){
+            auto better_start_time = chrono::high_resolution_clock::now();
             cpuColumn = tree.findBetterMovement();
+            auto better_end_time = chrono::high_resolution_clock::now();
+
+            // Calcula la duración de la llamada a findBetterMovement
+            auto better_duration = chrono::duration_cast<chrono::microseconds>(better_end_time - better_start_time);
+
+            cout << "Tiempo de findBetterMovement: " << better_duration.count() << " microsegundos\n" << endl;
         }
 
         if (game.playerMovements('O', cpuColumn)) {
@@ -88,7 +96,7 @@ void letsPlayMinimaxPAB(conectFour game, int mode)
     Tree tree;
     char player = 'X' , ia = 'O';
     cout<<"welcome to the easy mode conect 4!\nlest's begin!\n"<<endl;
-
+    auto start_time = chrono::high_resolution_clock::now();
     while(true)
     {
 
@@ -147,7 +155,15 @@ void letsPlayMinimaxPAB(conectFour game, int mode)
         if(mode==1){
             cpuColumn = tree.findMediumMovementPAB();
         }else if(mode == 2){
+
+            auto better_start_time = chrono::high_resolution_clock::now();
             cpuColumn = tree.findBetterMovementPAB();
+            auto better_end_time = chrono::high_resolution_clock::now();
+
+            // Calcula la duración de la llamada a findBetterMovement
+            auto better_duration = chrono::duration_cast<chrono::microseconds>(better_end_time - better_start_time);
+
+            cout << "Tiempo de findBetterMovement: " << better_duration.count() << " microsegundos\n" << endl;
         }
 
         if (game.playerMovements('O', cpuColumn)) {
@@ -164,11 +180,10 @@ void letsPlayMinimaxPAB(conectFour game, int mode)
 
 void printMenu(conectFour game)
 {
-
     cout << "\nHello, welcome to the game Connect 4!\n" <<endl;
     int v = true;
     int algorithm;
-    cout << "(choose which algorithm you want to program the computer with)\n1.- minimax\n2.-minimax with poda alpha beta\n" <<endl;
+    cout << "(choose which algorithm you want to program the computer with)\n1.- minimax\n2.- minimax with poda alpha beta\n" <<endl;
 
     // validacion para ingresar el indice por teclado
     while(true)
