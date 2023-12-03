@@ -5,6 +5,32 @@
 #include "Tree.h"
 using namespace std;
 
+void writeBoardToCSV(const conectFour& game, const string& filename) {
+ofstream csvFile(filename);
+
+    if (!csvFile.is_open()) {
+        cerr << "Error: Unable to open file " << filename << " for writing.\n" << endl;
+        return;
+    }
+
+    // Escribir encabezados de columna
+    csvFile << "Column 0,Column 1,Column 2,Column 3,Column 4,Column 5,Column 6\n";
+
+    // Escribir datos del tablero
+    for (int i = 0; i < ROW; ++i) {
+        for (int j = 0; j < COLUMN; ++j) {
+            csvFile << game.getPieceAt(i, j);
+            if (j < COLUMN - 1) {
+                csvFile << ",";
+            }
+        }
+        csvFile << "\n";
+    }
+
+    csvFile.close();
+    cout << "Board has been written to " << filename << ".\n" << endl;
+}
+
 void letsPlayMinimax(conectFour game, int mode)
 {
     Tree tree;
@@ -88,6 +114,28 @@ void letsPlayMinimax(conectFour game, int mode)
         } else {
             cout << "Error en el movimiento de la CPU." << endl;
         }
+        int v;
+        while(true)
+        {
+            string selection;
+            cout<<"1.- Do you wanna still playing?\n2.- Do you wanna save the game and leave?\n"<<endl;
+            try {
+                cin>>selection;
+                v = stoi(selection);
+                if(v==1 || v==2){
+                    break;
+                }else{
+                    cout<<"invalid menu, try again\n"<<endl;
+                }
+            } catch (const invalid_argument& e) {
+                cerr << "Error: Invalid entry. Please enter a valid number.\n" << endl;
+            }
+        }
+        if(v==2){
+            writeBoardToCSV(game,"loadGame.csv");
+            cout<<"The game was saved successfully!\n"<<endl;
+            break;
+        }
     } game.resetBoard();
 }
 
@@ -129,7 +177,6 @@ void letsPlayMinimaxPAB(conectFour game, int mode)
                 cerr << "Error: Invalid entry. Please enter a valid number.\n" << endl;
             }
         }
-
         // verificacion de ingreso exitoso por parte del jugador
         if(!game.playerMovements(player,playerMove))
         {
@@ -175,6 +222,28 @@ void letsPlayMinimaxPAB(conectFour game, int mode)
         } else {
             cout << "Error en el movimiento de la CPU." << endl;
         }
+        int v;
+        while(true)
+        {
+            string selection;
+            cout<<"1.- Do you wanna still playing?\n2.- Do you wanna save the game and leave?\n"<<endl;
+            try {
+                cin>>selection;
+                v = stoi(selection);
+                if(v==1 || v==2){
+                    break;
+                }else{
+                    cout<<"invalid menu, try again\n"<<endl;
+                }
+            } catch (const invalid_argument& e) {
+                cerr << "Error: Invalid entry. Please enter a valid number.\n" << endl;
+            }
+        }
+        if(v==2){
+            writeBoardToCSV(game,"loadGame.csv");
+            cout<<"The game was saved successfully!\n"<<endl;
+            break;
+        }
     } game.resetBoard();
 }
 
@@ -204,7 +273,7 @@ void printMenu(conectFour game)
 
     while (v) {
         string option;
-        cout << "The difficulty levels that exist will be displayed below. Enter the number you want:\n1.- Easy.\n2.- Normal.\n3.- Hard.\n4.- Exit\n" <<endl;
+        cout << "The difficulty levels that exist will be displayed below. Enter the number you want:\n1.- Easy.\n2.- Normal.\n3.- Hard.\n4.- Load a game.\n5.- Exit\n" <<endl;
 
         try {
             cin >> option;
@@ -231,7 +300,33 @@ void printMenu(conectFour game)
                     }
                     break;
                 case 4:
-                    cout<<"Thanks for playing with us!\n"<<endl;
+                    cout << "choose the difficulty\n1.- normal\n2.- hard\n" <<endl;
+                    int s;
+                    while(true)
+                    {
+                        try {
+                            string selection;
+                            cin>>selection;
+                            s = stoi(selection);
+                            if(s==1 || s==2){
+                                break;
+                            }else{
+                                cout<<"invalid cin, try again\n"<<endl;
+                            }
+                        } catch (const invalid_argument& e) {
+                                cerr << "Error: Invalid entry. Please enter a valid number.\n" << endl;
+                        }
+                    }
+                    if(s==1){
+                        game.loadBoardFromCSV("loadGame.csv");
+                        letsPlayMinimax(game,s);
+                    }else{
+                        game.loadBoardFromCSV("loadGame.csv");
+                        letsPlayMinimax(game,s);
+                    }
+                    break;
+                case 5:
+                cout<<"Thanks for playing with us!\n"<<endl;
                     v = false;
                     break;
                 default:

@@ -33,9 +33,12 @@ public:
     int evaluateLine(char player, int row, int col, int rowDirection, int colDirection);
     int evaluateBoard();
     int getColumn();
+    int getRow();
     int getNumberOfPieces(int column, char piece);
     int getNumberOfEmptySpaces(int column);
     int evaluateLines(char player);
+    char getPieceAt(int row, int col)const;
+    void loadBoardFromCSV(const string& filename);
     //---------------------------------------------
 
     //----------- easy mode -----------
@@ -58,6 +61,64 @@ conectFour::conectFour()
 int conectFour::getColumn(){
     int c = COLUMN;
     return c;
+}
+
+int conectFour::getRow(){
+    int c = ROW;
+    return c;
+}
+
+char conectFour::getPieceAt(int row, int col) const {
+    if (row >= 0 && row < ROW && col >= 0 && col < COLUMN) {
+        return board[row][col];
+    } else {
+        return ' ';
+    }
+}
+
+void conectFour::loadBoardFromCSV(const string& filename) {
+    ifstream inFile(filename);
+
+    if (!inFile.is_open()) {
+        cerr << "Error: Unable to open file " << filename << " for reading.\n" << endl;
+        return;
+    }
+
+    // Limpiar el tablero actual
+    resetBoard();
+
+    string line;
+    int row = 0;
+
+    // Verificar si el archivo está vacío
+    if (inFile.peek() == ifstream::traits_type::eof()) {
+        inFile.close();
+        cout << "Error: The file " << filename << " is empty. No saved game found.\n" << endl;
+        return;
+    }
+
+    // Saltar la primera línea
+    getline(inFile, line);
+
+    while (getline(inFile, line) && row < ROW) {
+        istringstream iss(line);
+        int col = 0;
+        char piece;
+
+        for (char c : line) {
+            if (col < COLUMN) {
+                if (c == 'X' || c == 'O' || c == ' ') {
+                    board[row][col] = c;
+                    ++col;
+                }
+            }
+        }
+
+        ++row;
+    }
+
+    inFile.close();
+    cout << "Board has been loaded from " << filename << ".\n" << endl;
 }
 
 void conectFour::removeTab(int col)
