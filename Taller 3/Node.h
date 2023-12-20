@@ -1,15 +1,18 @@
+#pragma once
 #include <iostream>
 #include <vector>
+#include "Arista.h"
 using namespace std;
 
 class Node{
     private:
+
         int id;
         string serverName;
         string type;
-        vector<Node*> neighbors;
-
+        vector<Arista> neighbors;
     public:
+
         Node(int id,string serverName,string type){
             this->id=id;
             this->serverName = serverName;
@@ -23,5 +26,14 @@ class Node{
         }
         string getType(){
             return this->type;
+        }
+        const vector<Arista>& getNeighbors() const {
+        return neighbors;
+        }
+        void addNeighbor(int idNeighbor, int velocidad, int segundos) {
+            neighbors.push_back(Arista(idNeighbor, velocidad, segundos));
+        }
+        vector<Arista> getNeighbors(){
+            return neighbors;
         }
 };
