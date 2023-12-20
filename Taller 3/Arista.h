@@ -10,13 +10,13 @@ class Arista{
         int segundos;
     public:
         Arista(int dest, int vel, int seg) : destino(dest), velocidad(vel),segundos(seg) {}
-        int getDestino() { 
+        int getDestino() const { 
             return this-> destino;
         }
-        int getVelocidad() { 
+        int getVelocidad() const { 
             return this-> velocidad;
         }
-        int getSegundos() { 
+        int getSegundos() const { 
             return this-> segundos; 
         }
 };
