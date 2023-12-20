@@ -104,10 +104,11 @@ int main()
     fillVector(nodos);
     fillGrafo(nodos,grafo);
     createConections(grafo);
-    vector<Node*> v = grafo.getNodos();
+    vector<Node*> vectorNode = grafo.getNodos();
 
     // esto es un print trucho para para que veas como funcionan las conexiones 
-    for (Node* nodo : v) {
+    /*
+    for (Node* nodo : vectorNode) {
         cout << "Nodo " << nodo->getId() << " - " << nodo->getServerName() << " - " << nodo->getType() << endl;
         cout << "Aristas:" << endl;
         for (Arista& arista : nodo->getNeighbors()) {
@@ -115,6 +116,40 @@ int main()
         }
         cout << endl;
     }
+    */
+
+    int idNodo, pesoElegido, idDestino;
+    bool menuBool = true;
+    string eleccion;
+    
+    while(menuBool){
+        cout << "-----------------------------------" << endl;
+        cout << "                Menu             " << endl;
+        cout << "-----------------------------------" << endl;
+
+        cout << "Ingrese la id del origen: " << endl;
+        cin >> idNodo;
+        cout << "Ingrese el peso del archivo(mb): " << endl;
+        cin >> pesoElegido;
+        cout << "Ingrese la id del destino: " << endl;
+        cin >> idDestino;
+        cout << "-----------------------------------" << endl;
+
+        grafo.bellmanFord(idNodo,pesoElegido,idDestino);
+
+        cout << "-----------------------------------" << endl;
+        cout << "Desea elegir otro destino?: (si/no)" << endl;
+        cout << "-----------------------------------" << endl;
+        cin >> eleccion;
+        if(eleccion == "no"){
+            menuBool = false;
+        }
+        cout << "-----------------------------------" << endl;
+    }
+
+    cout << "Saliendo del programa." << endl;
+    cout << "-----------------------------------" << endl;
+
 
     return 0;
 }
