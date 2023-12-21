@@ -100,24 +100,13 @@ int main()
     Grafo grafo;
     vector<Node*> nodos;
 
-    //funciones
+    // funciones
     fillVector(nodos);
     fillGrafo(nodos,grafo);
     createConections(grafo);
     vector<Node*> vectorNode = grafo.getNodos();
 
-    // esto es un print trucho para para que veas como funcionan las conexiones 
-    /*
-    for (Node* nodo : vectorNode) {
-        cout << "Nodo " << nodo->getId() << " - " << nodo->getServerName() << " - " << nodo->getType() << endl;
-        cout << "Aristas:" << endl;
-        for (Arista& arista : nodo->getNeighbors()) {
-            cout << "  Destino: " << arista.getDestino() << " (Velocidad: " << arista.getVelocidad() << ", Segundos: " << arista.getSegundos() << ")" << endl;
-        }
-        cout << endl;
-    }
-    */
-
+    // variable para el menu
     int idNodo, pesoElegido, idDestino;
     bool menuBool = true;
     string eleccion;
