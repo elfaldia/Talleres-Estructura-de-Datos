@@ -6,6 +6,7 @@
 #include "Node.h"
 using namespace std;
 
+// clase grafo
 class Grafo{
 private:
     vector<Node*> nodos;
@@ -42,6 +43,8 @@ public:
         return nodos;
     }
     // --------------------------------
+    // Calculadora del tiempo (devuelve numero entero)
+    // --------------------------------
     int calculadoraTiempo(int pesoMb,int velocidad){
         int division = 0;
         if(pesoMb < velocidad){
@@ -55,6 +58,7 @@ public:
     // ALGORITMO BELLMAN-FORD
     // --------------------------------
     void bellmanFord(int nodoOrigen, int pesoMb, int destino) {
+        // variables bellman
         int numNodos = nodos.size();
         vector<double> distancia(numNodos, numeric_limits<double>::infinity());
         vector<int> padre(numNodos, -1);
@@ -62,7 +66,6 @@ public:
 
         distancia[nodoOrigen] = 0;
 
-        // Aplicar el algoritmo de Bellman-Ford
         for (int i = 0; i < numNodos - 1; ++i) {
             for (Node* nodo : nodos) {
                 for (const Arista& arista : nodo->getNeighbors()) {
@@ -70,7 +73,7 @@ public:
                     int v = arista.getDestino();
                     int peso = arista.getSegundos();
 
-                    // Calcular tiempo total para esta arista
+                    // Calcular tiempo total
                     int tiempo = calculadoraTiempo(pesoMb,arista.getVelocidad());
                     double tiempoArista = tiempo * arista.getSegundos();
 
@@ -90,7 +93,7 @@ public:
                 int v = arista.getDestino();
                 int peso = arista.getSegundos();
 
-                // Calcular tiempo total para esta arista
+                // Calcular tiempo total
                 int tiempo = calculadoraTiempo(pesoMb,arista.getVelocidad());
                 double tiempoArista = tiempo * arista.getSegundos();
 
@@ -104,7 +107,7 @@ public:
         // Imprimir resultados
         cout << "Tiempo total a tardar desde " << nodoOrigen << " hasta " << destino << ": " << distancia[destino] << " segundos." << endl;
 
-        // Construir y mostrar el camino
+        // mostrar el camino de los nodos
         vector<int> camino;
         int nodoActual = destino;
         while (nodoActual != -1) {
@@ -120,7 +123,7 @@ public:
         }
         cout << endl;
 
-        // Construir y mostrar el camino en función del tiempo
+        // mostrar el camino de cada nodo por tiempo acumulado
         cout << "Camino en función del tiempo: " << endl;
         for (int i = 0; i < numNodos; ++i) {
             for(int j=0;j<camino.size();j++){
