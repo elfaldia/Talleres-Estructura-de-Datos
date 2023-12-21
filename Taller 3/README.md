@@ -32,3 +32,10 @@ a armar las aristas para cada uno y creando sus ciertas conexiones, por
 otro lado, al momento de crear una arista entre un nodo1 y un nodo2, este 
 se hara de forma bidireccional.
 ---------------------------------------
+Bellman-Ford
+crea una lista desde el origen hasta todos los demás nodos (iniciándolos desde el infinito), también otra lista el cual tiene el seguimiento de los nodos con caminos más cortos (vector padre).
+
+se iteran sobre todos los nodos, y se recorren las aristas del grafo, las cuales se actualizan si se encuentra un camino mas corto, también verificar los ciclos negativos.
+
+finalmente se imprime el recorrido con el calculo correspondiente al tamaño del archivo con la velocidad y distancia de las conexiones.
+---------------------------------------
