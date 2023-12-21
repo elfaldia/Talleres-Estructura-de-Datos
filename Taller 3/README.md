@@ -38,4 +38,5 @@ crea una lista desde el origen hasta todos los demás nodos (iniciándolos desde
 se iteran sobre todos los nodos, y se recorren las aristas del grafo, las cuales se actualizan si se encuentra un camino mas corto, también verificar los ciclos negativos.
 
 finalmente se imprime el recorrido con el calculo correspondiente al tamaño del archivo con la velocidad y distancia de las conexiones.
+Usando un metodo el cual devuelve solo la parte entera de dicha division y metodos que imprimen todo lo requerido por pantalla.
 ---------------------------------------

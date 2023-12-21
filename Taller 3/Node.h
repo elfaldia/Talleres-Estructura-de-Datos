@@ -4,6 +4,7 @@
 #include "Arista.h"
 using namespace std;
 
+// clase nodo
 class Node{
     private:
 

@@ -3,6 +3,7 @@
 #include <vector>
 using namespace std;
 
+// clase arista
 class Arista{
     private:
         int destino;

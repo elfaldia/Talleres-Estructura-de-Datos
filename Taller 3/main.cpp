@@ -111,6 +111,7 @@ int main()
     bool menuBool = true;
     string eleccion;
     
+    // menu interactivo
     while(menuBool){
         cout << "-----------------------------------" << endl;
         cout << "                Menu             " << endl;
@@ -124,6 +125,7 @@ int main()
         cin >> idDestino;
         cout << "-----------------------------------" << endl;
 
+        // algoritmo bellmanFord
         grafo.bellmanFord(idNodo,pesoElegido,idDestino);
 
         cout << "-----------------------------------" << endl;
